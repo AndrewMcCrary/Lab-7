@@ -5,9 +5,8 @@ template<typename T>
 class MidListy : public Listy<T>
 {
 private: 
-    T data = Listy();
-    int minIndex = 12;
-    int maxIndex = 12;
+    int minIndex = ARR_SIZE / 2;
+    int maxIndex = ARR_SIZE / 2;
 
 public:
     void addItem(T var);
@@ -22,30 +21,45 @@ inline void MidListy<T>::addItem(T var)
     if (this->isFull())
         throw ListyOverflow();
     if (this->isEmpty()) {
-        data[maxIndex++] = var;
+        this->data[maxIndex++] = var;
         return;
     }
 
-    if (this->maxIndex != 25) {
+    if (this->maxIndex != this->maxSize()) {
         // Insert Right
         this->data[maxIndex++] = var;
-        std::sort(data + (sizeof(int) * this->minIndex), data + (sizeof(int) * this->maxIndex));
+        std::sort(this->data + (sizeof(int) * this->minIndex), this->data + (sizeof(int) * this->maxIndex));
     }
     else {
-        // Insert Letf
+        // Insert Left
         this->data[--minIndex] = var;
-        std::sort(data + (sizeof(int) * this->minIndex), data + (sizeof(int) * this->maxIndex));
+        std::sort(this->data + (sizeof(int) * this->minIndex), this->data + (sizeof(int) * this->maxIndex));
     }
 }
 
 template<typename T>
 inline T MidListy<T>::removeItem(int index)
 {
-    if (isEmpty()) 
+    if (this->size() == 0) 
         throw ListyUnderflow;
-    if (index > size()) 
-        throw IndexOutOfBounds;
-
+    if(this->data[index] == INT_MIN){
+		// no value at index, nothing changes
+		return INT_MIN;
+	}
+    T retVal = this->data[index];
+    if (index >= 12){
+        for (int x = index; x < maxIndex-1; x++){
+            this->data[x] = this->data[x + 1];
+        }
+        this->data[--maxIndex] = INT_MIN;
+    }
+    else{
+        for (int x = index; x > minIndex; x--) {
+            this->data[x] = this->data[x - 1];
+        }
+        this->data[minIndex++] = INT_MIN;
+    }
+    return retVal;
 }
 
 template<typename T>

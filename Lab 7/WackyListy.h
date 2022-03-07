@@ -5,46 +5,77 @@ template <typename T>
 class WackyListy : public Listy<T>
 {
 private:
-
+    void addItemRecur(int var, int midPoint, int prevMidpoint);
 public:
-    void addItem(T var);
+    void addItem(int var);
     int size();
     T removeItem(int index);
 };
 
-inline void WackyListy<int>::addItem(int var)
+template<typename T>
+inline void WackyListy<T>::addItemRecur(int var, int midPoint, int prevMidpoint)
 {
-    if (this->data[this->maxSize() / 2] != (int)NULL) {
-        this->data[this->maxSize() / 2] = var;
+    if (this->data[midPoint] == INT_MIN) {
+        this->data[midPoint] = var;
         return;
     }
-
-    int starting = 0;
-    int midPoint = this->maxSize() / 2;
-
-    do
-    {
-        if (midPoint != (int)NULL) {
-            this->data[midPoint] = var;
-            break;
+    else if (midPoint == prevMidpoint) {
+        // move shit around
+        bool right = 0;
+        int rightNullIndex;
+        int leftNullIndex;
+        for (rightNullIndex = midPoint; rightNullIndex < this->size(); ++rightNullIndex) {
+            if (this->data[rightNullIndex] == INT_MIN) {
+                right = true;
+                break;
+            }
         }
 
-        if (this->data[midPoint] > var) {
+        for (leftNullIndex = midPoint; leftNullIndex > 0; leftNullIndex--) {
+            if (this->data[leftNullIndex] == INT_MIN) {
+                right = false;
+                break;
+            }
+        }
 
+        if (right) {
+            for (; midPoint < rightNullIndex; rightNullIndex--) {
+                this->data[rightNullIndex] = this->data[rightNullIndex - 1];
+            }
+            this->data[midPoint] = var;
         }
         else {
-            if (this->data[this->])
+            for (; midPoint > leftNullIndex; leftNullIndex++) {
+                this->data[leftNullIndex] = this->data[leftNullIndex + 1];
+            }
+            this->data[midPoint] = var;
         }
-    } while (void);
 
+    }
+    else if (var > this->data[midPoint]) {
+        this->addItemRecur(var, midPoint + (abs(midPoint - prevMidpoint) / 2), midPoint);
+    }
+    else if (var <= this->data[midPoint]) {
+        this->addItemRecur(var, midPoint - (abs(midPoint - prevMidpoint) / 2), midPoint);
+    }
 }
+
+inline void WackyListy<int>::addItem(int var)
+{
+    if (this->size() == this->maxSize())
+        throw ListyOverflow();
+
+    this->addItemRecur(var, this->maxSize() / 2, NULL);
+}
+
+
 
 template<typename T>
 inline int WackyListy<T>::size()
 {
     int count = 0;
-    for(int x = 0; x <= 24; x++){
-        if(data[x] != NULL){
+    for(int x = 0; x < this->maxSize(); x++) {
+        if(this->data[x] != INT_MIN){
             count++;
         }
     }
@@ -54,15 +85,15 @@ inline int WackyListy<T>::size()
 template<typename T>
 inline T WackyListy<T>::removeItem(int index)
 {
-    if (isEmpty()) {
+    if (this->isEmpty()) {
         throw ListyUnderflow;
     }
-    if (data[index] == NULL) {
-        return NULL;
+    if (this->data[index] == INT_MIN) {
+        return INT_MIN;
     }
     else {
-        T retval = data[index];
-        data[index] = NULL;
+        this->data[index] = INT_MIN;
+        T retVal = this->data[index];
         return retVal;
     }
 }

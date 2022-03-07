@@ -5,15 +5,18 @@
 #include <type_traits>
 #include <cstdint>
 
+#define ARR_SIZE 25
+
 template <typename T>
 class Listy
 {
 protected:
-	int _size;
-	T data[25];
+	int _size = 0;
+	T data[ARR_SIZE];
 
 public:
-	int maxSize() { return 25; }
+	Listy();
+	int maxSize() { return ARR_SIZE; }
 	void addItem(T var);
 	T removeItem(int index);
 	bool isFull();
@@ -50,12 +53,20 @@ struct IndexOutOfBounds : public std::exception
 };
 
 template<typename T>
+inline Listy<T>::Listy()
+{
+	for (int i = 0; i < this->maxSize(); i++) {
+		this->data[i] = INT_MIN;
+	}
+}
+
+template<typename T>
 inline void Listy<T>::addItem(T var)
 {
 	if (this->isFull())
 		throw ListyOverflow();
-	this.data[_size++] = var;
-	if (std::is_same<int, T>)
+	this->data[_size++] = var;
+	if (std::is_same<int, T>())
 		std::sort(data, data + (sizeof(int) * this->size()));
 }
 
@@ -66,14 +77,15 @@ inline T Listy<T>::removeItem(int index)
 		throw ListyUnderflow();
 	if(index > 24)
 		throw IndexOutOfBounds();
-	if(data[index] == NULL){
+	if(data[index] == INT_MIN){
+		// no value at index, nothing changes
 		return NULL;
 	}
 	T retVal = data[index];
 	for(int x = index; x < _size-1; x++){
 		data[x] == data[x + 1];
 	}
-	data[_size-1] = NULL;
+	data[_size-1] = INT_MIN;
 	_size--;
 	return retVal;
 }
@@ -81,7 +93,7 @@ inline T Listy<T>::removeItem(int index)
 template<typename T>
 inline bool Listy<T>::isFull()
 {
-	return this->size() >= 25;
+	return this->size() >= ARR_SIZE;
 }
 
 template<typename T>

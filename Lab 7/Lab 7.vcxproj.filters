@@ -26,5 +26,8 @@
     <ClInclude Include="MidListy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WackyListy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
