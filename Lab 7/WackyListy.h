@@ -48,14 +48,18 @@ inline void WackyListy<int>::addItem(int var) {
             }
 
         for (int i = shiftIndex; i < upperBound; i++)
-            this->data[i] = this->data[i+1];
+            this->data[i] = this->data[i + 1];
         this->data[upperBound] = var;
+        // moved item
+        this->countAdding++;
     }
     else {
         // Shift right
         for (int i = shiftIndex; i > upperBound; i--)
             this->data[i] = this->data[i - 1];
         this->data[upperBound] = var;
+        // moved item
+        this->countAdding++;
     }
 
 }
@@ -75,9 +79,8 @@ inline int WackyListy<T>::size()
 template<typename T>
 inline T WackyListy<T>::removeItem(int index)
 {
-    if (this->isEmpty()) {
-        throw ListyUnderflow;
-    }
+    /*if (this->isEmpty()) 
+        throw ListyUnderflow;*/
     if (this->data[index] == INT_MIN) {
         return INT_MIN;
     }
@@ -85,5 +88,6 @@ inline T WackyListy<T>::removeItem(int index)
         this->data[index] = INT_MIN;
         T retVal = this->data[index];
         return retVal;
+        // no swaps/comparisons, count stays 0!
     }
 }

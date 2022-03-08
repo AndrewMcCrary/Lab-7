@@ -13,6 +13,8 @@ class Listy
 protected:
 	int _size = 0;
 	T data[ARR_SIZE];
+	int countAdding = 0;
+	int countRemoving = 0;
 
 public:
 	Listy();
@@ -22,6 +24,8 @@ public:
 	bool isFull();
 	bool isEmpty();
 	void makeEmpty();
+	int getCA() { return countAdding; }
+	int getCR() { return countRemoving; }
 	int size() { return this->_size; }
 	bool operator==(Listy* l);
 	bool operator<(Listy* l);
@@ -66,8 +70,17 @@ inline void Listy<T>::addItem(T var)
 	if (this->isFull())
 		throw ListyOverflow();
 	this->data[_size++] = var;
-	if (std::is_same<int, T>())
-		std::sort(data, data + (sizeof(int) * this->size()));
+	for (int x = _size - 1; x > 0; x--) {
+		if (data[x] > data[x - 1]){
+			// comparison 
+			countAdding++;
+			T temp = data[x - 1];
+			data[x - 1] = data[x];
+			data[x] = temp;
+			// count swap
+			countAdding++;
+		}
+	}
 }
 
 template<typename T>
@@ -84,6 +97,8 @@ inline T Listy<T>::removeItem(int index)
 	T retVal = data[index];
 	for(int x = index; x < _size-1; x++){
 		data[x] = data[x + 1];
+		// count swap 
+		countRemoving++;
 	}
 	data[_size-1] = INT_MIN;
 	_size--;
