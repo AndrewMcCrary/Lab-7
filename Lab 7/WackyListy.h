@@ -5,70 +5,60 @@ template <typename T>
 class WackyListy : public Listy<T>
 {
 private:
-    void addItemRecur(int var, int midPoint, int prevMidpoint);
+
 public:
     void addItem(int var);
     int size();
     T removeItem(int index);
 };
 
-template<typename T>
-inline void WackyListy<T>::addItemRecur(int var, int midPoint, int prevMidpoint)
-{
-    if (this->data[midPoint] == INT_MIN) {
-        this->data[midPoint] = var;
+inline void WackyListy<int>::addItem(int var) {
+    if (this->size() == 0) {
+        this->data[this->maxSize() / 2] = var;
         return;
     }
-    else if (midPoint == prevMidpoint) {
-        // move shit around
-        bool right = 0;
-        int rightNullIndex;
-        int leftNullIndex;
-        for (rightNullIndex = midPoint; rightNullIndex < this->size(); ++rightNullIndex) {
-            if (this->data[rightNullIndex] == INT_MIN) {
-                right = true;
+
+    int upperBound, lowerBound;
+
+    for (upperBound = 0; this->data[upperBound] < var && upperBound < this->maxSize() - 1; upperBound++);
+    for (lowerBound = upperBound; this->data[lowerBound - 1] == INT_MIN && lowerBound > 0; lowerBound--);
+
+    if (upperBound - lowerBound) {
+        this->data[(upperBound + lowerBound) / 2] = var;
+        return;
+    }
+
+    // The bounds would be the same if there is no space
+
+    // Check if shift right is possible
+    int shiftIndex = -1;
+    for (int i = upperBound; i < this->maxSize(); i++) {
+        if (this->data[i] == INT_MIN) {
+            shiftIndex = i;
+            break;
+        }
+    }
+
+    if (shiftIndex == -1) {
+        // Shift left
+        for (int i = upperBound; i >= 0; i--)
+            if (this->data[i] == INT_MIN) {
+                shiftIndex = i;
                 break;
             }
-        }
 
-        for (leftNullIndex = midPoint; leftNullIndex > 0; leftNullIndex--) {
-            if (this->data[leftNullIndex] == INT_MIN) {
-                right = false;
-                break;
-            }
-        }
+        for (int i = shiftIndex; i < upperBound; i++)
+            this->data[i] = this->data[i+1];
+        this->data[upperBound] = var;
+    }
+    else {
+        // Shift right
+        for (int i = shiftIndex; i > upperBound; i--)
+            this->data[i] = this->data[i - 1];
+        this->data[upperBound] = var;
+    }
 
-        if (right) {
-            for (; midPoint < rightNullIndex; rightNullIndex--) {
-                this->data[rightNullIndex] = this->data[rightNullIndex - 1];
-            }
-            this->data[midPoint] = var;
-        }
-        else {
-            for (; midPoint > leftNullIndex; leftNullIndex++) {
-                this->data[leftNullIndex] = this->data[leftNullIndex + 1];
-            }
-            this->data[midPoint] = var;
-        }
-
-    }
-    else if (var > this->data[midPoint]) {
-        this->addItemRecur(var, midPoint + (abs(midPoint - prevMidpoint) / 2), midPoint);
-    }
-    else if (var <= this->data[midPoint]) {
-        this->addItemRecur(var, midPoint - (abs(midPoint - prevMidpoint) / 2), midPoint);
-    }
 }
-
-inline void WackyListy<int>::addItem(int var)
-{
-    if (this->size() == this->maxSize())
-        throw ListyOverflow();
-
-    this->addItemRecur(var, this->maxSize() / 2, NULL);
-}
-
-
 
 template<typename T>
 inline int WackyListy<T>::size()

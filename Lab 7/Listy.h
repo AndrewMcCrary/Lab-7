@@ -83,7 +83,7 @@ inline T Listy<T>::removeItem(int index)
 	}
 	T retVal = data[index];
 	for(int x = index; x < _size-1; x++){
-		data[x] == data[x + 1];
+		data[x] = data[x + 1];
 	}
 	data[_size-1] = INT_MIN;
 	_size--;
