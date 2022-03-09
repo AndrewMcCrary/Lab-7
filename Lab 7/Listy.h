@@ -11,12 +11,12 @@ template <typename T>
 class Listy
 {
 protected:
-	int _size = 0;
-	T data[ARR_SIZE];
 	int countAdding = 0;
 	int countRemoving = 0;
 
 public:
+	int _size = 0;
+	T data[ARR_SIZE];
 	Listy();
 	int maxSize() { return ARR_SIZE; }
 	void addItem(T var);
@@ -26,7 +26,7 @@ public:
 	void makeEmpty();
 	int getCA() { return countAdding; }
 	int getCR() { return countRemoving; }
-	int size() { return this->_size; }
+	virtual int size() { return this->_size; }
 	bool operator==(Listy* l);
 	bool operator<(Listy* l);
 	bool operator>(Listy* l);

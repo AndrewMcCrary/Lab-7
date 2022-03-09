@@ -9,7 +9,7 @@ private:
     int maxIndex = ARR_SIZE / 2;
 
 public:
-    void addItem(T var);
+    void addItem(T thing);
     void removeItem(int index);
     int getMinIndex() { return minIndex; }
     int getMaxIndex() { return maxIndex; }
@@ -17,21 +17,34 @@ public:
 };
 
 template<typename T>
-inline void MidListy<T>::addItem(T var)
+inline void MidListy<T>::addItem(T thing)
 {
-    if (this->getMaxIndex() - this->getMinIndex() > this->maxSize())
+    if (this->maxIndex - this->minIndex >= this->maxSize())
         throw ListyOverflow();
-    
-    // max is empty, min contains first value
-    
-    if (this->getMaxIndex() >= this->maxSize()) {
-        this->data[this->maxSize() - 1] = var;
-    }
-    else {
-        this->data[maxIndex++] = var;
+    if (this->minIndex == this->maxIndex) {
+        this->data[this->maxIndex++] = thing;
+        return;
     }
 
-    return;
+    for (int i = this->getMinIndex(); i < this->getMaxIndex(); i++) {
+        if (this->data[i] >= thing) {
+            if (this->getMinIndex() > 0) {
+                // shift all back
+                for (int j = this->getMinIndex() - 1; j < i; j++)
+                    this->data[j] = this->data[j + 1];
+                this->data[i] = thing;
+                this->minIndex--;
+                break;
+            }
+            else {
+                for (int j = this->getMaxIndex(); j > i; j--)
+                    this->data[j] = this->data[j - 1];
+                this->data[i] = thing;
+                this->maxIndex++;
+                break;
+            }
+        }
+    }
 }
 
 template<typename T>

@@ -14,7 +14,6 @@ int main(void) {
 		Listy<int> list1 = Listy<int>();
 		MidListy<int> list2 = MidListy<int>();
 		WackyListy<int> list3 = WackyListy<int>();
-
 		// rand() % 100, [0, 99]
 		// rand() % 100 + 1, [1, 100]
 
