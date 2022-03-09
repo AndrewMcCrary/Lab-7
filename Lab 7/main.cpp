@@ -19,14 +19,15 @@ int main(void) {
 		// rand() % 100 + 1, [1, 100]
 
 		// adds 25 random items to each list 
+		/**/
 		for (int x = 1; x < 26; x++) {
 			int num = rand() % 50 + 1;
 			list1.addItem(num);
 		}
-		/*for (int x = 1; x < 26; x++) {
+		for (int x = 1; x < 26; x++) {
 			int num = rand() % 50 + 1;
-			list2.MidListy::addItem(num);
-		}*/
+			list2.addItem(num);
+		}
 		for (int x = 1; x < 26; x++) {
 			int num = rand() % 50 + 1;
 			list3.addItem(num);
@@ -41,12 +42,12 @@ int main(void) {
 		}
 
 		// removing 20 items from MidListy
-		/*x = 1;
+		x = 1;
 		while (x <= 20) {
-			int index = rand() % list2.size() + list2.getMinIndex();
-			list2.MidListy::removeItem(index);
+			int index = rand() % list2.size();
+			list2.removeItem(index);
 			x++;
-		}*/
+		}
 
 		//// removing 20 items from WackyListy
 		x = 1;
@@ -61,6 +62,7 @@ int main(void) {
 		cout << "MidListy comparisons/swaps   - adding: " << list2.getCA() << " / removing: " << list2.getCR() << endl;
 		cout << "WackyListy comparisons/swaps - adding: " << list3.getCA() << " / removing: " << list3.getCR() << endl << endl;
 	}
+
 
 	return 0;
 }
