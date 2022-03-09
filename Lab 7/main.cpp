@@ -25,7 +25,7 @@ int main(void) {
 		}
 		for (int x = 1; x < 26; x++) {
 			int num = rand() % 50 + 1;
-			list2.addItem(num);
+			list2.addItemtwo(num);
 		}
 		for (int x = 1; x < 26; x++) {
 			int num = rand() % 50 + 1;
